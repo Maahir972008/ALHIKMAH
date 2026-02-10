@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management System - Plagiarism Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+</head>
+<link rel="stylesheet" href="css/plag.css">
+<link rel="stylesheet" href="js/plag.js">
+<script src="js/plag.js"></script>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                <img class="logo-icon" src="logo.png" alt="">
+                </div>
+                <div class="logo-text">AL-HIKMAH UNIVERSITY</div>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            
+            <a href="upload.html" class="nav-item">
+                <i class="fas fa-upload nav-icon"></i>
+                <span class="nav-text">New (Upload)</span>
+            </a>
+            
+            <a href="repo.html" class="nav-item">
+                <i class="fas fa-database nav-icon"></i>
+                <span class="nav-text">View (Repository)</span>
+            </a>
+            
+            <a href="plag.html" class="nav-item active">
+                <i class="fas fa-search nav-icon"></i>
+                <span class="nav-text">Track (Plagiarism Engine)</span>
+            </a>
+            
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog nav-icon"></i>
+                <span class="nav-text">Settings</span>
+            </a>
+            
+            <!-- <a href="about.html" class="nav-item">
+                <i class="fas fa-info-circle nav-icon"></i>
+                <span class="nav-text">About</span>
+            </a> -->
+        </div>
+        
+        <div class="sidebar-footer">
+            <button class="toggle-btn" id="toggleBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="page-title">Track (Plagiarism Engine)</div>
+            <div class="user-profile">
+                <div class="avatar">JS</div>
+                <div>
+                    <div class="user-name">John Smith</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Plagiarism Engine Content -->
+        <div class="plagiarism-content">
+            <!-- Header Section -->
+            <section class="plagiarism-header">
+                <div class="plagiarism-banner">
+                    <div class="plagiarism-banner-content">
+                        <h1>Plagiarism Detection Engine</h1>
+                        <p>Upload documents to check for originality. Our system compares your content against academic databases, web sources, and your repository to detect potential plagiarism.</p>
+                    </div>
+                    <div class="banner-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <h2 class="section-title">
+                    <i class="fas fa-upload"></i> Upload Documents for Analysis
+                </h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">Supported formats: PDF, DOC, DOCX, TXT (Max file size: 10MB)</p>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Drag & drop your files here</div>
+                    <div class="upload-subtext">or click to browse files</div>
+                    <button class="browse-btn" id="browseBtn">Browse Files</button>
+                    <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.doc,.docx,.txt">
+                </div>
+                
+                <div class="selected-files" id="selectedFiles">
+                    <!-- Files will be added here dynamically -->
+                </div>
+                
+                <div class="loading-container" id="loadingContainer">
+                    <div class="spinner"></div>
+                    <p>Scanning documents for plagiarism... This may take a few moments.</p>
+                    <p style="color: var(--text-light); margin-top: 10px;">Checking against 5.2+ billion web pages and academic databases</p>
+                </div>
+                
+                <button class="scan-btn" id="scanBtn" disabled>
+                    <i class="fas fa-search"></i> Scan for Plagiarism
+                </button>
+            </section>
+            
+            <!-- Results Section -->
+            <section class="results-section">
+                <div class="results-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-pie"></i> Scan Results
+                    </h2>
+                    <div class="results-actions">
+                        <button class="action-btn" id="exportBtn">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                        <button class="action-btn primary" id="newScanBtn">
+                            <i class="fas fa-plus"></i> New Scan
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-container" id="resultsContainer">
+                    <!-- Results will be displayed here -->
+                </div>
+                
+                <div class="no-results" id="noResults">
+                    <div class="no-results-icon">
+                        <i class="fas fa-file-search"></i>
+                    </div>
+                    <h3>No Scan Results Yet</h3>
+                    <p>Upload documents and run a plagiarism check to see results here.</p>
+                </div>
+            </section>
+            
+            <!-- History Section -->
+            <section class="history-section">
+                <h2 class="section-title">
+                    <i class="fas fa-history"></i> Recent Scan History
+                </h2>
+                
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Date Scanned</th>
+                            <th>Similarity Score</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Research_Paper_Final.pdf</td>
+                            <td>Oct 15, 2023</td>
+                            <td>12%</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                            <td><a href="#" class="view-report"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                        <tr>
+                            <td>Thesis_Chapter_3.docx</td>
+                            <td>Oct 14, 2023</td>
+                            <td>5%</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                            <td><a href="#" class="view-report"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                        <tr>
+                            <td>Article_Draft_v2.pdf</td>
+                            <td>Oct 12, 2023</td>
+                            <td>23%</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                            <td><a href="#" class="view-report"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                        <tr>
+                            <td>Literature_Review.docx</td>
+                            <td>Oct 10, 2023</td>
+                            <td>8%</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                            <td><a href="#" class="view-report"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                        <tr>
+                            <td>Conference_Paper_Final.pdf</td>
+                            <td>Oct 8, 2023</td>
+                            <td>17%</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                            <td><a href="#" class="view-report"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+      <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 70px;
+            --header-height: 70px;
+            --border-radius: 10px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+        
+        /* Sidebar Navigation - Same as dashboard */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            color: var(--primary-color);
+            height: 65px;
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            margin: 8px 12px;
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            width: 24px;
+            margin-right: 16px;
+        }
+        
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .toggle-btn {
+            background: var(--accent-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .toggle-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+        }
+        
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        .header {
+            height: var(--header-height);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Plagiarism Engine Content */
+        .plagiarism-content {
+            padding: 30px;
+        }
+        
+        /* Header Section */
+        .plagiarism-header {
+            margin-bottom: 30px;
+        }
+        
+        .plagiarism-banner {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .plagiarism-banner-content h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .plagiarism-banner-content p {
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .banner-icon {
+            font-size: 80px;
+            opacity: 0.8;
+        }
+        
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--primary-color);
+        }
+        
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 50px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        
+        .upload-area.drag-over {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: var(--text-dark);
+        }
+        
+        .upload-subtext {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .browse-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .browse-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .selected-files {
+            margin-top: 20px;
+        }
+        
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: var(--accent-color);
+            border-radius: var(--border-radius);
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .file-icon {
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        
+        .file-name {
+            font-weight: 500;
+        }
+        
+        .file-size {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .remove-file {
+            color: var(--danger-color);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 18px;
+        }
+        
+        .scan-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        
+        .scan-btn:hover {
+            background: #0da271;
+        }
+        
+        .scan-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: var(--accent-color);
+        }
+        
+        .action-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .results-container {
+            display: none;
+        }
+        
+        .results-container.active {
+            display: block;
+        }
+        
+        .plagiarism-score {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .score-value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+        
+        .score-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .score-low {
+            color: var(--success-color);
+        }
+        
+        .score-medium {
+            color: var(--warning-color);
+        }
+        
+        .score-high {
+            color: var(--danger-color);
+        }
+        
+        .matches-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .match-item {
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        
+        .match-item:hover {
+            box-shadow: var(--shadow);
+        }
+        
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .match-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .match-percentage {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .match-percentage.low {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .match-percentage.medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .match-percentage.high {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .match-details {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .match-source {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+        }
+        
+        .no-results-icon {
+            font-size: 48px;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+        
+        /* History Section */
+        .history-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .history-table th {
+            text-align: left;
+            padding: 15px;
+            background: var(--accent-color);
+            color: var(--text-dark);
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .status-complete {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-processing {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .view-report {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-report:hover {
+            text-decoration: underline;
+        }
+        
+        /* Loading Animation */
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .loading-container.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar:not(.collapsed) {
+                width: var(--sidebar-width);
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar:not(.collapsed) + .main-content {
+                margin-left: var(--sidebar-width);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .plagiarism-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .banner-icon {
+                font-size: 60px;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .results-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+      </style>
+
+      <script>
+        
+        // Toggle sidebar collapse
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            
+            // Rotate the chevron icon
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        });
+        
+        // Handle navigation item clicks
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Don't prevent default for actual navigation
+                if (!item.href || item.href === '#') {
+                    e.preventDefault();
+                }
+                
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // If on mobile, collapse sidebar after selection
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.add('collapsed');
+                    const icon = toggleBtn.querySelector('i');
+                    icon.classList.remove('fa-chevron-left');
+                    icon.classList.add('fa-chevron-right');
+                }
+            });
+        });
+        
+        // Plagiarism Engine Functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const selectedFiles = document.getElementById('selectedFiles');
+        const scanBtn = document.getElementById('scanBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const noResults = document.getElementById('noResults');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const newScanBtn = document.getElementById('newScanBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        
+        let uploadedFiles = [];
+        
+        // File upload handling
+        browseBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        // Handle selected files
+        function handleFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`File "${file.name}" exceeds the 10MB size limit.`);
+                    continue;
+                }
+                
+                // Check file type
+                const allowedTypes = ['application/pdf', 'application/msword', 
+                                      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                                      'text/plain'];
+                
+                if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|doc|docx|txt)$/i)) {
+                    alert(`File "${file.name}" is not a supported format. Please upload PDF, DOC, DOCX, or TXT files.`);
+                    continue;
+                }
+                
+                // Add to uploaded files array if not already present
+                if (!uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    uploadedFiles.push(file);
+                }
+            }
+            
+            updateSelectedFilesList();
+        }
+        
+        // Update the selected files list UI
+        function updateSelectedFilesList() {
+            selectedFiles.innerHTML = '';
+            
+            if (uploadedFiles.length === 0) {
+                selectedFiles.style.display = 'none';
+                scanBtn.disabled = true;
+                return;
+            }
+            
+            selectedFiles.style.display = 'block';
+            scanBtn.disabled = false;
+            
+            const fileList = document.createElement('div');
+            fileList.className = 'file-list';
+            
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                // Format file size
+                const fileSize = file.size < 1024 * 1024 
+                    ? `${(file.size / 1024).toFixed(1)} KB` 
+                    : `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+                
+                // Determine icon based on file type
+                let fileIcon = 'fa-file';
+                if (file.type.includes('pdf')) fileIcon = 'fa-file-pdf';
+                else if (file.type.includes('word') || file.name.match(/\.docx?$/i)) fileIcon = 'fa-file-word';
+                else if (file.type.includes('text') || file.name.match(/\.txt$/i)) fileIcon = 'fa-file-alt';
+                
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <i class="fas ${fileIcon} file-icon"></i>
+                        <div>
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${fileSize}</div>
+                        </div>
+                    </div>
+                    <button class="remove-file" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                fileList.appendChild(fileItem);
+            });
+            
+            selectedFiles.appendChild(fileList);
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-file').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                    uploadedFiles.splice(index, 1);
+                    updateSelectedFilesList();
+                });
+            });
+        }
+        
+        // Scan for plagiarism
+        scanBtn.addEventListener('click', () => {
+            // Show loading animation
+            loadingContainer.classList.add('active');
+            scanBtn.disabled = true;
+            
+            // Hide previous results
+            resultsContainer.classList.remove('active');
+            noResults.style.display = 'none';
+            
+            // Simulate scanning process (in real app, this would be an API call)
+            setTimeout(() => {
+                loadingContainer.classList.remove('active');
+                showScanResults();
+            }, 3000);
+        });
+        
+        // Show scan results
+        function showScanResults() {
+            // Generate random results for demonstration
+            const similarityScore = Math.floor(Math.random() * 40); // 0-39%
+            const matchCount = Math.floor(Math.random() * 8) + 1; // 1-8 matches
+            
+            // Determine score level and color
+            let scoreLevel, scoreClass;
+            if (similarityScore < 10) {
+                scoreLevel = "Low";
+                scoreClass = "score-low";
+            } else if (similarityScore < 20) {
+                scoreLevel = "Medium";
+                scoreClass = "score-medium";
+            } else {
+                scoreLevel = "High";
+                scoreClass = "score-high";
+            }
+            
+            // Set circle color based on score
+            let circleColor;
+            if (similarityScore < 10) circleColor = "#10b981";
+            else if (similarityScore < 20) circleColor = "#f59e0b";
+            else circleColor = "#ef4444";
+            
+            // Generate matches
+            let matchesHTML = '';
+            const sources = [
+                "Academic Database: Journal of Computer Science",
+                "Web Source: Wikipedia Article",
+                "Repository: User_JohnDoe_Research.pdf",
+                "Academic Database: IEEE Transactions",
+                "Web Source: Medium Blog Post",
+                "Academic Database: Springer Conference Proceedings",
+                "Web Source: ResearchGate Publication",
+                "Repository: Project_Document_Final.docx"
+            ];
+            
+            for (let i = 0; i < matchCount; i++) {
+                const matchPercent = Math.floor(Math.random() * 30) + 5; // 5-34%
+                let matchClass = "low";
+                if (matchPercent > 15) matchClass = "medium";
+                if (matchPercent > 25) matchClass = "high";
+                
+                matchesHTML += `
+                    <div class="match-item">
+                        <div class="match-header">
+                            <div class="match-title">${sources[i % sources.length]}</div>
+                            <div class="match-percentage ${matchClass}">${matchPercent}% match</div>
+                        </div>
+                        <div class="match-details">
+                            This section of your document shows similarity to content from this source. 
+                            ${matchPercent > 20 ? "Consider revising or properly citing this content." : "This is likely common knowledge or properly cited material."}
+                        </div>
+                        <div class="match-source">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>View source</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Build results HTML
+            resultsContainer.innerHTML = `
+                <div class="plagiarism-score">
+                    <div class="score-circle" style="background: conic-gradient(${circleColor} 0% ${similarityScore}%, #e2e8f0 ${similarityScore}% 100%);">
+                        <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <div class="score-value">${similarityScore}%</div>
+                        </div>
+                    </div>
+                    <div class="score-text ${scoreClass}">${scoreLevel} Similarity</div>
+                    <p style="color: var(--text-light); max-width: 500px; margin: 10px auto;">
+                        ${similarityScore < 10 ? "Your document shows minimal similarity to other sources. This is excellent!" : 
+                          similarityScore < 20 ? "Your document has acceptable similarity levels. Review the matches below." : 
+                          "Your document has significant similarity to other sources. Review and revise highlighted sections."}
+                    </p>
+                </div>
+                
+                <h3 style="margin-bottom: 15px;">Detected Matches (${matchCount})</h3>
+                <div class="matches-list">
+                    ${matchesHTML}
+                </div>
+            `;
+            
+            // Show results and hide "no results" message
+            resultsContainer.classList.add('active');
+            noResults.style.display = 'none';
+            
+            // Reset for next scan
+            uploadedFiles = [];
+            updateSelectedFilesList();
+        }
+        
+        // New scan button
+        newScanBtn.addEventListener('click', () => {
+            resultsContainer.classList.remove('active');
+            noResults.style.display = 'block';
+            fileInput.value = '';
+        });
+        
+        // Export report button
+        exportBtn.addEventListener('click', () => {
+            if (resultsContainer.classList.contains('active')) {
+                alert("Report exported successfully! (This would download a PDF report in a real application)");
+            } else {
+                alert("No results to export. Please run a plagiarism scan first.");
+            }
+        });
+        
+        // Responsive behavior: auto-collapse sidebar on small screens
+        function handleResponsive() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.add('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                sidebar.classList.remove('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        }
+        
+        // Initial responsive check
+        handleResponsive();
+        
+        // Listen for window resize
+        window.addEventListener('resize', handleResponsive);
+        
+        // Initialize the page
+        updateSelectedFilesList();
+   
+      </script>
+
+</body>
+</html>

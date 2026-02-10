@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management System - Project Repository</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<link rel="stylesheet" href="css/repo.css">
+<link rel="stylesheet" href="js/repo.js">
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img class="logo-icon" src="logo.png" alt="">
+                </div>
+                <div class="logo-text">AL-HIKMAH UNIVERSITY</div>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            
+            <a href="upload.html" class="nav-item">
+                <i class="fas fa-upload nav-icon"></i>
+                <span class="nav-text">New (Upload)</span>
+            </a>
+            
+            <a href="repo.html" class="nav-item active">
+                <i class="fas fa-database nav-icon"></i>
+                <span class="nav-text">View (Repository)</span>
+            </a>
+            
+            <a href="plag.html" class="nav-item">
+                <i class="fas fa-search nav-icon"></i>
+                <span class="nav-text">Track (Plagiarism Engine)</span>
+            </a>
+            
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog nav-icon"></i>
+                <span class="nav-text">Settings</span>
+            </a>
+            
+            <!-- <a href="about.html" class="nav-item">
+                <i class="fas fa-info-circle nav-icon"></i>
+                <span class="nav-text">About</span>
+            </a> -->
+        </div>
+        
+        <div class="sidebar-footer">
+            <button class="toggle-btn" id="toggleBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="page-title">Project Repository</div>
+            <div class="user-profile">
+                <div class="avatar">JS</div>
+                <div class="user-info">
+                    <div class="user-name">John Smith</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Repository Content -->
+        <div class="repository-content">
+            <!-- Search Interface -->
+            <div class="search-section">
+                <div class="search-header">
+                    <h2 class="search-title">
+                        <i class="fas fa-search"></i> Search Projects
+                    </h2>
+                    <div class="total-projects" id="totalProjects">1,247 Projects</div>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search by Registration Number or Project Title...">
+                    </div>
+                    <div class="search-actions">
+                        <button class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-secondary" id="clearSearchBtn">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="search-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-layer-group"></i> All Projects
+                    </button>
+                    <button class="filter-btn" data-filter="completed">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </button>
+                    <button class="filter-btn" data-filter="pending">
+                        <i class="fas fa-clock"></i> Pending Review
+                    </button>
+                    <button class="filter-btn" data-filter="processing">
+                        <i class="fas fa-sync-alt"></i> Processing
+                    </button>
+                    <button class="filter-btn" data-filter="recent">
+                        <i class="fas fa-calendar-alt"></i> Recent (Last 30 days)
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Project List Section -->
+            <div class="project-list-section">
+                <div class="list-header">
+                    <h3 class="list-title">
+                        <i class="fas fa-list"></i> Project List
+                    </h3>
+                    <div class="list-actions">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="table">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <button class="btn btn-secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Grid View -->
+                <div class="project-grid" id="projectGrid">
+                    <!-- Project cards will be dynamically inserted here -->
+                </div>
+                
+                <!-- Table View (Hidden by default) -->
+                <div class="project-table-container" style="display: none;">
+                    <table class="project-table" id="projectTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">ID</th>
+                                <th>Project Title</th>
+                                <th style="width: 180px;">Student</th>
+                                <th style="width: 150px;">Registration No.</th>
+                                <th style="width: 120px;">Date</th>
+                                <th style="width: 120px;">Status</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectTableBody">
+                            <!-- Table rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <h3 class="empty-title">No Projects Found</h3>
+                    <p class="empty-description">Try adjusting your search or filter to find what you're looking for.</p>
+                    <button class="btn btn-primary" id="resetFiltersBtn">
+                        <i class="fas fa-redo"></i> Reset Filters
+                    </button>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <button class="pagination-btn" id="prevPageBtn" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <div class="page-numbers" id="pageNumbers">
+                        <!-- Page numbers will be dynamically inserted here -->
+                    </div>
+                    <button class="pagination-btn" id="nextPageBtn">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detail View -->
+    <div class="detail-view" id="detailView">
+        <div class="detail-header">
+            <div class="detail-title">
+                <i class="fas fa-file-alt"></i>
+                <span id="detailProjectTitle">Project Title</span>
+            </div>
+            <div class="detail-actions">
+                <button class="btn btn-secondary" id="printDetailBtn">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="btn btn-secondary" id="downloadDetailBtn">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="btn btn-primary" id="closeDetailBtn">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+        
+        <div class="detail-content">
+            <!-- Project Overview -->
+            <div class="project-overview">
+                <div class="overview-grid">
+                    <div class="overview-item">
+                        <div class="overview-label">Project ID</div>
+                        <div class="overview-value" id="detailProjectId">PROJ-001</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Student Name</div>
+                        <div class="overview-value" id="detailStudentName">John Doe</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Registration Number</div>
+                        <div class="overview-value" id="detailRegNumber">2023-CS-001</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Supervisor</div>
+                        <div class="overview-value" id="detailSupervisor">Dr. Sarah Johnson</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Degree Type</div>
+                        <div class="overview-value" id="detailDegreeType">Master's Thesis</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Submission Date</div>
+                        <div class="overview-value" id="detailSubmissionDate">2023-11-15</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Status</div>
+                        <div class="overview-value">
+                            <span class="project-status status-completed" id="detailStatus">Completed</span>
+                        </div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Plagiarism Score</div>
+                        <div class="overview-value" id="detailPlagiarismScore">2.4%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Sections -->
+            <div class="content-sections" id="contentSections">
+                <!-- Abstract -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-file-alt"></i> Abstract
+                        </h3>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-eye"></i> View File
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <p id="detailAbstract">This research investigates the impact of machine learning algorithms on predictive analytics in healthcare. The study examines various classification models and their effectiveness in predicting patient outcomes based on historical data. Results indicate that ensemble methods provide the highest accuracy for this particular application.</p>
+                    </div>
+                </div>
+                
+                <!-- Chapters will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --secondary-color: #64748b;
+            --accent-color: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 70px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            color: var(--primary-color);
+            height: 65px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            margin: 8px 12px;
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            width: 24px;
+            margin-right: 16px;
+        }
+        
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .toggle-btn {
+            background: var(--accent-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .toggle-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        .header {
+            height: var(--header-height);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            flex-shrink: 0;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Repository Content */
+        .repository-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Search Interface */
+        .search-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .search-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .search-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-title i {
+            color: var(--primary-color);
+        }
+        
+        .total-projects {
+            background-color: var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-input i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+        
+        .search-input input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .search-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 10px 16px;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .filter-btn.active i {
+            color: white;
+        }
+        
+        .search-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+        
+        /* Project List Section */
+        .project-list-section {
+            flex: 1;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 0;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .list-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .list-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .list-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-toggle {
+            display: flex;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .view-btn {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+        
+        .view-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .view-btn:not(:last-child) {
+            border-right: 1px solid #cbd5e1;
+        }
+        
+        /* Grid View */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .project-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .project-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        
+        .project-id {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .project-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-processing {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+        
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .meta-item i {
+            width: 16px;
+            color: var(--secondary-color);
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .action-btn {
+            flex: 1;
+            background: none;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 8px;
+            font-size: 12px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .action-btn i {
+            font-size: 14px;
+        }
+        
+        /* Table View */
+        .project-table {
+            width: 100%;
+            border-collapse: collapse;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .project-table thead {
+            background-color: #f8fafc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .project-table th {
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .project-table tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .project-table tbody tr:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .project-table td {
+            padding: 15px 20px;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+        
+        .table-project-title {
+            font-weight: 600;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .table-action-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 6px 10px;
+            font-size: 12px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .table-action-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        /* Detail View (Full Page) */
+        .detail-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 1000;
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .detail-view.active {
+            display: flex;
+        }
+        
+        .detail-header {
+            height: var(--header-height);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .detail-title {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .detail-title i {
+            color: var(--primary-color);
+        }
+        
+        .detail-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .detail-content {
+            padding: 30px;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .project-overview {
+            background: #f8fafc;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .overview-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .overview-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .overview-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .content-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--primary-color);
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .section-content {
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+        
+        .section-content pre {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        
+        .file-preview {
+            background: #f8fafc;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .file-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .file-meta {
+            display: flex;
+            gap: 15px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+            gap: 10px;
+        }
+        
+        .pagination-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 8px 12px;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background-color: var(--accent-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-numbers {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-number {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-number.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .page-number:hover:not(.active) {
+            background-color: var(--accent-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 60px;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+        
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        
+        .empty-description {
+            color: var(--text-light);
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar:not(.collapsed) {
+                width: var(--sidebar-width);
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar:not(.collapsed) + .main-content {
+                margin-left: var(--sidebar-width);
+            }
+            
+            .project-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header, .detail-header {
+                padding: 0 15px;
+            }
+            
+            .repository-content {
+                padding: 20px;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-filters {
+                flex-wrap: wrap;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .project-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-content {
+                padding: 20px;
+            }
+        }
+   
+    </style>
+
+
+<script>
+    
+        // Toggle sidebar collapse
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            
+            // Rotate the chevron icon
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        });
+        
+        // Sample project data
+        const sampleProjects = [
+            {
+                id: "PROJ-001",
+                title: "Machine Learning Algorithms for Predictive Healthcare Analytics",
+                student: "John Doe",
+                regNumber: "2023-CS-001",
+                supervisor: "Dr. Sarah Johnson",
+                degree: "Master's Thesis",
+                date: "2023-11-15",
+                status: "completed",
+                plagiarismScore: "2.4%",
+                abstract: "This research investigates the impact of machine learning algorithms on predictive analytics in healthcare. The study examines various classification models and their effectiveness in predicting patient outcomes based on historical data. Results indicate that ensemble methods provide the highest accuracy for this particular application.",
+                chapters: [
+                    { title: "Introduction", content: "Chapter 1 introduces the problem domain and research objectives...", file: "chapter1.docx", size: "2.1 MB" },
+                    { title: "Literature Review", content: "This chapter reviews existing literature on machine learning in healthcare...", file: "chapter2.docx", size: "1.8 MB" },
+                    { title: "Methodology", content: "The research methodology includes data collection, preprocessing, and model selection...", file: "chapter3.docx", size: "1.5 MB" },
+                    { title: "Results & Analysis", content: "Experimental results show that Random Forest achieved 94.2% accuracy...", file: "chapter4.docx", size: "2.3 MB" },
+                    { title: "Conclusion", content: "The study concludes that ensemble methods are most effective for healthcare prediction...", file: "chapter5.docx", size: "1.7 MB" }
+                ],
+                references: "1. Smith, J. (2020). Machine Learning in Healthcare. Journal of Medical Informatics...",
+                appendix: "Additional datasets and code implementations are included in the appendix."
+            },
+            {
+                id: "PROJ-002",
+                title: "Blockchain Implementation for Secure Academic Credential Verification",
+                student: "Alice Johnson",
+                regNumber: "2023-CS-002",
+                supervisor: "Prof. Michael Chen",
+                degree: "Bachelor's Thesis",
+                date: "2023-10-28",
+                status: "pending",
+                plagiarismScore: "1.8%",
+                abstract: "This project explores the application of blockchain technology for creating a tamper-proof system for academic credential verification. The proposed solution uses smart contracts to automate verification processes and enhance security.",
+                chapters: [
+                    { title: "Introduction", content: "Chapter 1 discusses the current challenges in academic credential verification...", file: "chapter1.docx", size: "1.9 MB" },
+                    { title: "Literature Review", content: "Existing blockchain implementations in education are reviewed...", file: "chapter2.docx", size: "2.2 MB" },
+                    { title: "Methodology", content: "The system architecture and smart contract design are described...", file: "chapter3.docx", size: "1.6 MB" },
+                    { title: "Results & Analysis", content: "The prototype implementation shows promising results for scalability...", file: "chapter4.docx", size: "2.5 MB" },
+                    { title: "Conclusion", content: "Blockchain offers a viable solution for secure credential verification...", file: "chapter5.docx", size: "1.4 MB" }
+                ],
+                references: "1. Nakamoto, S. (2008). Bitcoin: A Peer-to-Peer Electronic Cash System...",
+                appendix: "Smart contract code and test cases."
+            },
+            {
+                id: "PROJ-003",
+                title: "Natural Language Processing for Automated Essay Scoring",
+                student: "Robert Williams",
+                regNumber: "2023-ENG-001",
+                supervisor: "Dr. Elizabeth Parker",
+                degree: "PhD Dissertation",
+                date: "2023-12-05",
+                status: "processing",
+                plagiarismScore: "3.2%",
+                abstract: "This dissertation presents a novel approach to automated essay scoring using transformer-based models. The research compares various NLP techniques and proposes a hybrid model that achieves state-of-the-art results.",
+                chapters: [
+                    { title: "Introduction", content: "Automated essay scoring systems and their importance in education...", file: "chapter1.docx", size: "2.4 MB" },
+                    { title: "Literature Review", content: "Review of NLP techniques for text classification and scoring...", file: "chapter2.docx", size: "2.7 MB" },
+                    { title: "Methodology", content: "BERT-based model architecture and training methodology...", file: "chapter3.docx", size: "1.8 MB" },
+                    { title: "Results & Analysis", content: "The proposed model achieves 92% correlation with human graders...", file: "chapter4.docx", size: "3.1 MB" },
+                    { title: "Conclusion", content: "Transformer models show superior performance for automated scoring...", file: "chapter5.docx", size: "1.9 MB" }
+                ],
+                references: "1. Vaswani, A. et al. (2017). Attention Is All You Need...",
+                appendix: "Dataset and model weights."
+            },
+            {
+                id: "PROJ-004",
+                title: "IoT-Based Smart Agriculture Monitoring System",
+                student: "Maria Garcia",
+                regNumber: "2023-EE-001",
+                supervisor: "Prof. David Kim",
+                degree: "Capstone Project",
+                date: "2023-09-20",
+                status: "completed",
+                plagiarismScore: "1.2%",
+                abstract: "This project designs and implements an IoT system for real-time monitoring of agricultural parameters. The system uses sensors to collect data on soil moisture, temperature, and humidity, transmitting it to a cloud platform for analysis.",
+                chapters: [
+                    { title: "Introduction", content: "The need for smart agriculture solutions in modern farming...", file: "chapter1.docx", size: "1.7 MB" },
+                    { title: "Literature Review", content: "Existing IoT applications in agriculture...", file: "chapter2.docx", size: "1.9 MB" },
+                    { title: "Methodology", content: "Hardware design, sensor selection, and cloud integration...", file: "chapter3.docx", size: "2.3 MB" },
+                    { title: "Results & Analysis", content: "Field tests show 30% reduction in water usage...", file: "chapter4.docx", size: "2.8 MB" },
+                    { title: "Conclusion", content: "IoT systems can significantly improve agricultural efficiency...", file: "chapter5.docx", size: "1.5 MB" }
+                ],
+                references: "1. Ashton, K. (2009). That 'Internet of Things' Thing...",
+                appendix: "Circuit diagrams and source code."
+            },
+            {
+                id: "PROJ-005",
+                title: "Computer Vision for Early Detection of Plant Diseases",
+                student: "James Wilson",
+                regNumber: "2023-BIO-001",
+                supervisor: "Dr. Patricia Lee",
+                degree: "Master's Thesis",
+                date: "2023-11-30",
+                status: "pending",
+                plagiarismScore: "4.1%",
+                abstract: "This research develops a computer vision system for early detection of plant diseases using convolutional neural networks. The model is trained on a dataset of plant leaf images and achieves high accuracy in disease classification.",
+                chapters: [
+                    { title: "Introduction", content: "The economic impact of plant diseases and need for early detection...", file: "chapter1.docx", size: "2.2 MB" },
+                    { title: "Literature Review", content: "Computer vision applications in agriculture...", file: "chapter2.docx", size: "2.5 MB" },
+                    { title: "Methodology", content: "CNN architecture and dataset preparation...", file: "chapter3.docx", size: "1.9 MB" },
+                    { title: "Results & Analysis", content: "The model achieves 96.5% accuracy on test data...", file: "chapter4.docx", size: "3.2 MB" },
+                    { title: "Conclusion", content: "Computer vision offers a practical solution for plant disease detection...", file: "chapter5.docx", size: "1.8 MB" }
+                ],
+                references: "1. LeCun, Y. et al. (1998). Gradient-Based Learning Applied to Document Recognition...",
+                appendix: "Image dataset and trained model."
+            }
+        ];
+        
+        // Generate more sample projects
+        function generateProjects(count) {
+            const projects = [...sampleProjects];
+            const titles = [
+                "Renewable Energy Optimization Using AI",
+                "Cybersecurity Threats in Cloud Computing",
+                "Augmented Reality for Educational Applications",
+                "Data Privacy in Social Media Platforms",
+                "Autonomous Vehicle Navigation Systems",
+                "Wearable Technology for Health Monitoring",
+                "Quantum Computing Algorithms",
+                "Sustainable Urban Planning Models",
+                "Biometric Authentication Systems",
+                "5G Network Security Protocols"
+            ];
+            
+            const students = [
+                "Emma Brown", "Daniel Miller", "Olivia Davis", "Matthew Wilson",
+                "Sophia Taylor", "Andrew Anderson", "Isabella Thomas", "Christopher Moore",
+                "Charlotte Jackson", "Joshua White"
+            ];
+            
+            const supervisors = [
+                "Dr. Richard Martinez", "Prof. Jennifer Thompson", "Dr. Kevin Harris",
+                "Prof. Amanda Clark", "Dr. Brian Lewis", "Prof. Melissa Walker",
+                "Dr. Steven Hall", "Prof. Rebecca Allen", "Dr. Timothy Young",
+                "Prof. Kimberly King"
+            ];
+            
+            const degrees = ["Bachelor's Thesis", "Master's Thesis", "PhD Dissertation", "Capstone Project", "Research Paper"];
+            const statuses = ["completed", "pending", "processing"];
+            
+            for (let i = 6; i <= count; i++) {
+                const titleIndex = Math.floor(Math.random() * titles.length);
+                const studentIndex = Math.floor(Math.random() * students.length);
+                const supervisorIndex = Math.floor(Math.random() * supervisors.length);
+                const degreeIndex = Math.floor(Math.random() * degrees.length);
+                const statusIndex = Math.floor(Math.random() * statuses.length);
+                
+                projects.push({
+                    id: `PROJ-${i.toString().padStart(3, '0')}`,
+                    title: titles[titleIndex],
+                    student: students[studentIndex],
+                    regNumber: `2023-${['CS', 'EE', 'ENG', 'BIO', 'MATH'][Math.floor(Math.random() * 5)]}-${i.toString().padStart(3, '0')}`,
+                    supervisor: supervisors[supervisorIndex],
+                    degree: degrees[degreeIndex],
+                    date: `2023-${Math.floor(Math.random() * 12 + 1).toString().padStart(2, '0')}-${Math.floor(Math.random() * 28 + 1).toString().padStart(2, '0')}`,
+                    status: statuses[statusIndex],
+                    plagiarismScore: `${(Math.random() * 5).toFixed(1)}%`,
+                    abstract: `This project explores ${titles[titleIndex].toLowerCase()}. The research investigates key aspects and proposes innovative solutions to address current challenges in the field.`,
+                    chapters: [
+                        { title: "Introduction", content: "Introduction chapter content...", file: "chapter1.docx", size: `${(Math.random() * 2 + 1).toFixed(1)} MB` },
+                        { title: "Literature Review", content: "Literature review chapter content...", file: "chapter2.docx", size: `${(Math.random() * 2 + 1).toFixed(1)} MB` },
+                        { title: "Methodology", content: "Methodology chapter content...", file: "chapter3.docx", size: `${(Math.random() * 2 + 1).toFixed(1)} MB` },
+                        { title: "Results & Analysis", content: "Results and analysis chapter content...", file: "chapter4.docx", size: `${(Math.random() * 2 + 1).toFixed(1)} MB` },
+                        { title: "Conclusion", content: "Conclusion chapter content...", file: "chapter5.docx", size: `${(Math.random() * 2 + 1).toFixed(1)} MB` }
+                    ],
+                    references: "References for the project...",
+                    appendix: "Appendix materials for the project."
+                });
+            }
+            
+            return projects;
+        }
+        
+        // Initialize projects
+        const allProjects = generateProjects(1247);
+        let filteredProjects = [...allProjects];
+        let currentFilter = 'all';
+        let currentView = 'grid';
+        let currentPage = 1;
+        const projectsPerPage = 12;
+        
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const viewBtns = document.querySelectorAll('.view-btn');
+        const projectGrid = document.getElementById('projectGrid');
+        const projectTableBody = document.getElementById('projectTableBody');
+        const projectTableContainer = document.querySelector('.project-table-container');
+        const emptyState = document.getElementById('emptyState');
+        const totalProjects = document.getElementById('totalProjects');
+        const pagination = document.getElementById('pagination');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const pageNumbers = document.getElementById('pageNumbers');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        const detailView = document.getElementById('detailView');
+        const closeDetailBtn = document.getElementById('closeDetailBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        
+        // Initialize
+        updateTotalProjects();
+        renderProjects();
+        setupPagination();
+        
+        // Search functionality
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                // If search is empty, just apply current filter
+                applyFilter(currentFilter);
+                return;
+            }
+            
+            // Search by registration number or title
+            filteredProjects = allProjects.filter(project => {
+                return project.regNumber.toLowerCase().includes(searchTerm) ||
+                       project.title.toLowerCase().includes(searchTerm) ||
+                       project.student.toLowerCase().includes(searchTerm);
+            });
+            
+            currentPage = 1;
+            updateTotalProjects();
+            renderProjects();
+            setupPagination();
+        }
+        
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            applyFilter(currentFilter);
+        });
+        
+        // Filter functionality
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+                
+                // Update active filter button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                applyFilter(filter);
+            });
+        });
+        
+        function applyFilter(filter) {
+            currentFilter = filter;
+            
+            if (filter === 'all') {
+                filteredProjects = [...allProjects];
+            } else if (filter === 'completed') {
+                filteredProjects = allProjects.filter(p => p.status === 'completed');
+            } else if (filter === 'pending') {
+                filteredProjects = allProjects.filter(p => p.status === 'pending');
+            } else if (filter === 'processing') {
+                filteredProjects = allProjects.filter(p => p.status === 'processing');
+            } else if (filter === 'recent') {
+                // Filter projects from last 30 days (simulated)
+                filteredProjects = allProjects.filter(() => Math.random() > 0.5);
+            }
+            
+            currentPage = 1;
+            updateTotalProjects();
+            renderProjects();
+            setupPagination();
+        }
+        
+        // View toggle functionality
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view;
+                
+                // Update active view button
+                viewBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                switchView(view);
+            });
+        });
+        
+        function switchView(view) {
+            currentView = view;
+            
+            if (view === 'grid') {
+                projectGrid.style.display = 'grid';
+                projectTableContainer.style.display = 'none';
+            } else {
+                projectGrid.style.display = 'none';
+                projectTableContainer.style.display = 'block';
+                renderTableView();
+            }
+            
+            // Update pagination display
+            setupPagination();
+        }
+        
+        // Render projects in grid view
+        function renderProjects() {
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * projectsPerPage;
+            const endIndex = startIndex + projectsPerPage;
+            const pageProjects = filteredProjects.slice(startIndex, endIndex);
+            
+            // Clear current content
+            projectGrid.innerHTML = '';
+            
+            if (pageProjects.length === 0) {
+                emptyState.style.display = 'flex';
+                projectGrid.style.display = 'none';
+                pagination.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            projectGrid.style.display = 'grid';
+            pagination.style.display = 'flex';
+            
+            // Render project cards
+            pageProjects.forEach(project => {
+                const card = createProjectCard(project);
+                projectGrid.appendChild(card);
+            });
+            
+            // If in table view, update it too
+            if (currentView === 'table') {
+                renderTableView();
+            }
+        }
+        
+        // Render projects in table view
+        function renderTableView() {
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * projectsPerPage;
+            const endIndex = startIndex + projectsPerPage;
+            const pageProjects = filteredProjects.slice(startIndex, endIndex);
+            
+            // Clear current content
+            projectTableBody.innerHTML = '';
+            
+            if (pageProjects.length === 0) {
+                emptyState.style.display = 'flex';
+                projectTableContainer.style.display = 'none';
+                pagination.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            projectTableContainer.style.display = 'block';
+            pagination.style.display = 'flex';
+            
+            // Render table rows
+            pageProjects.forEach(project => {
+                const row = createTableRow(project);
+                projectTableBody.appendChild(row);
+            });
+        }
+        
+        // Create project card for grid view
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.dataset.id = project.id;
+            
+            let statusClass = 'status-completed';
+            let statusText = 'Completed';
+            
+            if (project.status === 'pending') {
+                statusClass = 'status-pending';
+                statusText = 'Pending Review';
+            } else if (project.status === 'processing') {
+                statusClass = 'status-processing';
+                statusText = 'Processing';
+            }
+            
+            card.innerHTML = `
+                <div class="project-card-header">
+                    <div class="project-id">${project.id}</div>
+                    <div class="project-status ${statusClass}">${statusText}</div>
+                </div>
+                <h4 class="project-title">${project.title}</h4>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>${project.student}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-id-card"></i>
+                        <span>${project.regNumber}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>${project.supervisor}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Submitted: ${project.date}</span>
+                    </div>
+                </div>
+                <div class="project-actions">
+                    <button class="action-btn view-btn" data-id="${project.id}">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="action-btn download-btn" data-id="${project.id}">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="action-btn check-btn" data-id="${project.id}">
+                        <i class="fas fa-search"></i> Check Plagiarism
+                    </button>
+                </div>
+            `;
+            
+            // Add event listeners to buttons
+            card.querySelector('.view-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                openProjectDetail(project);
+            });
+            
+            card.querySelector('.download-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                downloadProject(project);
+            });
+            
+            card.querySelector('.check-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                checkPlagiarism(project);
+            });
+            
+            // Click on card to view details
+            card.addEventListener('click', () => {
+                openProjectDetail(project);
+            });
+            
+            return card;
+        }
+        
+        // Create table row for table view
+        function createTableRow(project) {
+            const row = document.createElement('tr');
+            row.dataset.id = project.id;
+            
+            let statusClass = 'status-completed';
+            let statusText = 'Completed';
+            
+            if (project.status === 'pending') {
+                statusClass = 'status-pending';
+                statusText = 'Pending Review';
+            } else if (project.status === 'processing') {
+                statusClass = 'status-processing';
+                statusText = 'Processing';
+            }
+            
+            row.innerHTML = `
+                <td>${project.id}</td>
+                <td>
+                    <div class="table-project-title">${project.title}</div>
+                </td>
+                <td>${project.student}</td>
+                <td>${project.regNumber}</td>
+                <td>${project.date}</td>
+                <td><span class="project-status ${statusClass}">${statusText}</span></td>
+                <td>
+                    <div class="table-actions">
+                        <button class="table-action-btn view-btn" data-id="${project.id}">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="table-action-btn download-btn" data-id="${project.id}">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            // Add event listeners to buttons
+            row.querySelector('.view-btn').addEventListener('click', () => {
+                openProjectDetail(project);
+            });
+            
+            row.querySelector('.download-btn').addEventListener('click', () => {
+                downloadProject(project);
+            });
+            
+            // Click on row to view details
+            row.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('table-action-btn')) {
+                    openProjectDetail(project);
+                }
+            });
+            
+            return row;
+        }
+        
+        // Open project detail view
+        function openProjectDetail(project) {
+            // Update detail view with project data
+            document.getElementById('detailProjectTitle').textContent = project.title;
+            document.getElementById('detailProjectId').textContent = project.id;
+            document.getElementById('detailStudentName').textContent = project.student;
+            document.getElementById('detailRegNumber').textContent = project.regNumber;
+            document.getElementById('detailSupervisor').textContent = project.supervisor;
+            document.getElementById('detailDegreeType').textContent = project.degree;
+            document.getElementById('detailSubmissionDate').textContent = project.date;
+            document.getElementById('detailPlagiarismScore').textContent = project.plagiarismScore;
+            document.getElementById('detailAbstract').textContent = project.abstract;
+            
+            // Update status
+            const statusElement = document.getElementById('detailStatus');
+            statusElement.textContent = project.status === 'completed' ? 'Completed' : 
+                                       project.status === 'pending' ? 'Pending Review' : 'Processing';
+            statusElement.className = 'project-status ' + 
+                (project.status === 'completed' ? 'status-completed' : 
+                 project.status === 'pending' ? 'status-pending' : 'status-processing');
+            
+            // Render chapters
+            const contentSections = document.getElementById('contentSections');
+            // Keep abstract section, remove others
+            const abstractSection = contentSections.querySelector('.content-section');
+            contentSections.innerHTML = '';
+            contentSections.appendChild(abstractSection);
+            
+            // Add chapters
+            project.chapters.forEach(chapter => {
+                const chapterSection = document.createElement('div');
+                chapterSection.className = 'content-section';
+                chapterSection.innerHTML = `
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-book"></i> ${chapter.title}
+                        </h3>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary view-chapter-btn">
+                                <i class="fas fa-eye"></i> View File
+                            </button>
+                            <button class="btn btn-secondary download-chapter-btn">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <p>${chapter.content}</p>
+                        <div class="file-preview">
+                            <div class="file-icon">
+                                <i class="fas fa-file-word"></i>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name">${chapter.file}</div>
+                                <div class="file-meta">
+                                    <span>Size: ${chapter.size}</span>
+                                    <span>Uploaded: ${project.date}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contentSections.appendChild(chapterSection);
+            });
+            
+            // Add references section
+            const referencesSection = document.createElement('div');
+            referencesSection.className = 'content-section';
+            referencesSection.innerHTML = `
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-bookmark"></i> References
+                    </h3>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <pre>${project.references}</pre>
+                </div>
+            `;
+            contentSections.appendChild(referencesSection);
+            
+            // Add appendix section if exists
+            if (project.appendix) {
+                const appendixSection = document.createElement('div');
+                appendixSection.className = 'content-section';
+                appendixSection.innerHTML = `
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-archive"></i> Appendix
+                        </h3>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <p>${project.appendix}</p>
+                    </div>
+                `;
+                contentSections.appendChild(appendixSection);
+            }
+            
+            // Show detail view
+            detailView.classList.add('active');
+        }
+        
+        // Close detail view
+        closeDetailBtn.addEventListener('click', () => {
+            detailView.classList.remove('active');
+        });
+        
+        // Download project
+        function downloadProject(project) {
+            alert(`Downloading project: ${project.title}`);
+            // In a real application, this would trigger a file download
+        }
+        
+        // Check plagiarism
+        function checkPlagiarism(project) {
+            alert(`Running plagiarism check for: ${project.title}\nCurrent score: ${project.plagiarismScore}`);
+            // In a real application, this would trigger the plagiarism engine
+        }
+        
+        // Export functionality
+        exportBtn.addEventListener('click', () => {
+            alert(`Exporting ${filteredProjects.length} projects to CSV`);
+            // In a real application, this would generate and download a CSV file
+        });
+        
+        // Reset filters
+        resetFiltersBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            filterBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+            applyFilter('all');
+        });
+        
+        // Update total projects count
+        function updateTotalProjects() {
+            totalProjects.textContent = `${filteredProjects.length.toLocaleString()} Projects`;
+        }
+        
+        // Pagination functionality
+        function setupPagination() {
+            const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+            
+            // Update button states
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+            
+            // Generate page numbers
+            pageNumbers.innerHTML = '';
+            
+            if (totalPages === 0) {
+                return;
+            }
+            
+            // Show first page, current page, and last page with ellipsis as needed
+            const pagesToShow = [];
+            
+            if (totalPages <= 5) {
+                // Show all pages
+                for (let i = 1; i <= totalPages; i++) {
+                    pagesToShow.push(i);
+                }
+            } else {
+                // Always show first page
+                pagesToShow.push(1);
+                
+                if (currentPage > 3) {
+                    pagesToShow.push('...');
+                }
+                
+                // Show pages around current page
+                const start = Math.max(2, currentPage - 1);
+                const end = Math.min(totalPages - 1, currentPage + 1);
+                
+                for (let i = start; i <= end; i++) {
+                    if (!pagesToShow.includes(i)) {
+                        pagesToShow.push(i);
+                    }
+                }
+                
+                if (currentPage < totalPages - 2) {
+                    pagesToShow.push('...');
+                }
+                
+                // Always show last page
+                if (!pagesToShow.includes(totalPages)) {
+                    pagesToShow.push(totalPages);
+                }
+            }
+            
+            // Create page number buttons
+            pagesToShow.forEach(page => {
+                if (page === '...') {
+                    const span = document.createElement('span');
+                    span.textContent = '...';
+                    span.style.padding = '0 5px';
+                    pageNumbers.appendChild(span);
+                } else {
+                    const button = document.createElement('button');
+                    button.className = `page-number ${page === currentPage ? 'active' : ''}`;
+                    button.textContent = page;
+                    button.addEventListener('click', () => {
+                        currentPage = page;
+                        renderProjects();
+                        setupPagination();
+                    });
+                    pageNumbers.appendChild(button);
+                }
+            });
+        }
+        
+        // Pagination button events
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderProjects();
+                setupPagination();
+            }
+        });
+        
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderProjects();
+                setupPagination();
+            }
+        });
+        
+        // Responsive behavior: auto-collapse sidebar on small screens
+        function handleResponsive() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.add('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                sidebar.classList.remove('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        }
+        
+        // Initial responsive check
+        handleResponsive();
+        
+        // Listen for window resize
+        window.addEventListener('resize', handleResponsive);
+  
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management System - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 70px;
+            --header-height: 70px;
+            --border-radius: 10px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            color: var(--primary-color);
+           height: 65px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            margin: 8px 12px;
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            width: 24px;
+            margin-right: 16px;
+        }
+        
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .toggle-btn {
+            background: var(--accent-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .toggle-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+        }
+        
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        .header {
+            height: var(--header-height);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .user-profile.active .avatar {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* .user-role {
+            font-size: 12px;
+            color: var(--text-light);
+        } */
+        
+        /* User Profile Dropdown Overlay */
+        .profile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .profile-overlay.active {
+            display: flex;
+            opacity: 1;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 70px;
+            right: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 320px;
+            z-index: 1001;
+            overflow: hidden;
+            display: none;
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-dropdown.active {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .dropdown-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dropdown-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .dropdown-user-info {
+            flex: 1;
+        }
+        
+        .dropdown-user-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .dropdown-user-role {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .dropdown-user-email {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .dropdown-menu {
+            padding: 10px 0;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .dropdown-icon {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 18px;
+            color: var(--text-light);
+        }
+        
+        .dropdown-item:hover .dropdown-icon {
+            color: var(--primary-color);
+        }
+        
+        .dropdown-text {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 8px 0;
+        }
+        
+        .dropdown-footer {
+            padding: 15px 20px;
+            background-color: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+        
+        /* Banner Section */
+        .banner-section {
+            margin-bottom: 30px;
+        }
+        
+        .banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+        }
+        
+        .banner-content h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .banner-content p {
+            opacity: 0.9;
+            max-width: 500px;
+        }
+        
+        .banner-icon {
+            font-size: 80px;
+            opacity: 0.8;
+        }
+        
+        /* Quick Access Section */
+        .quick-access-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .quick-access-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .access-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .access-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .access-card.primary {
+            border-top: 5px solid var(--primary-color);
+        }
+        
+        .access-card.green {
+            border-top: 5px solid #10b981;
+        }
+        
+        .access-card.orange {
+            border-top: 5px solid #f59e0b;
+        }
+        
+        .access-card.purple {
+            border-top: 5px solid #8b5cf6;
+        }
+        
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 28px;
+            color: white;
+        }
+        
+        .card-icon.primary {
+            background: var(--primary-color);
+        }
+        
+        .card-icon.green {
+            background: #10b981;
+        }
+        
+        .card-icon.orange {
+            background: #f59e0b;
+        }
+        
+        .card-icon.purple {
+            background: #8b5cf6;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .card-desc {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            margin-top: 40px;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+        
+        .stat-info h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* Profile Modal */
+        .profile-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 500px;
+            max-width: 90%;
+            z-index: 1002;
+            overflow: hidden;
+            display: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-modal.active {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: modalAppear 0.3s ease;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-content {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+        
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #0da271;
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-icon {
+            font-size: 20px;
+        }
+        
+        /* Session Timer */
+        .session-timer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 999;
+            border-left: 4px solid var(--primary-color);
+            display: none;
+        }
+        
+        .session-timer.active {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .timer-icon {
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        
+        .timer-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .timer-time {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        
+        /* Activity Log */
+        .activity-log {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 300px;
+            z-index: 998;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .activity-log.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .activity-header {
+            padding: 15px 20px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .activity-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .activity-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .activity-content {
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+        
+        .activity-time {
+            color: var(--text-light);
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar:not(.collapsed) {
+                width: var(--sidebar-width);
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar:not(.collapsed) + .main-content {
+                margin-left: var(--sidebar-width);
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .profile-dropdown {
+                right: 15px;
+                width: 280px;
+            }
+            
+            .activity-log {
+                right: 15px;
+                width: 280px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .banner-icon {
+                font-size: 60px;
+            }
+            
+            .quick-access-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-dropdown {
+                width: 280px;
+                right: 10px;
+            }
+            
+            .profile-modal {
+                width: 95%;
+            }
+            
+            .activity-log {
+                right: 10px;
+                width: 280px;
+            }
+            
+            .session-timer {
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 0 15px;
+            }
+            
+            .dashboard-content {
+                padding: 20px;
+            }
+            
+            .profile-dropdown {
+                width: 260px;
+            }
+            
+            .activity-log {
+                width: 260px;
+            }
+        }
+    </style>  
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                   <img class="logo-icon" src="logo.png" alt="">
+                </div>
+                <div class="logo-text">AL-HIKMAH UNIVERSITY</div>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            
+            <a href="upload.html" class="nav-item">
+                <i class="fas fa-upload nav-icon"></i>
+                <span class="nav-text">New (Upload)</span>
+            </a>
+            
+            <a href="repo.html" class="nav-item">
+                <i class="fas fa-database nav-icon"></i>
+                <span class="nav-text">View (Repository)</span>
+            </a>
+            
+            <a href="plag.html" class="nav-item">
+                <i class="fas fa-search nav-icon"></i>
+                <span class="nav-text">Track (Plagiarism Engine)</span>
+            </a>
+            
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog nav-icon"></i>
+                <span class="nav-text">Settings</span>
+            </a>
+
+            <!-- <a href="about.html" class="nav-item">
+                <i class="fas fa-info-circle nav-icon"></i>
+                <span class="nav-text">About</span>
+            </a> -->
+        </div>
+        
+        <div class="sidebar-footer">
+            <button class="toggle-btn" id="toggleBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="page-title">Dashboard</div>
+            <div class="user-profile" id="userProfile">
+                <div class="avatar" id="userAvatar">JS</div>
+                <div class="user-info">
+                    <div class="user-name" id="headerUserName">John Smith</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+                <i class="fas fa-chevron-down" style="font-size: 14px; color: var(--text-light);"></i>
+            </div>
+        </header>
+        
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Banner Section -->
+            <section class="banner-section">
+                <div class="banner">
+                    <div class="banner-content">
+                        <h1>Welcome to Document Manager</h1>
+                        <p>Upload, manage, and track your documents with our comprehensive system. Use the plagiarism engine to ensure originality and maintain your repository efficiently.</p>
+                    </div>
+                    <div class="banner-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Quick Access Section -->
+            <section class="quick-access-section">
+                <h2 class="section-title">Quick Access</h2>
+                <div class="quick-access-cards">
+                    <!-- Enter New Project Card -->
+                    <div class="access-card primary" id="enterNewProject">
+                        <div class="card-icon primary">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <h3 class="card-title">Enter New Project</h3>
+                        <p class="card-desc">Upload new documents, set metadata, and begin tracking</p>
+                    </div>
+                    
+                    <!-- View Repository Card -->
+                    <div class="access-card green" id="viewRepository">
+                        <div class="card-icon green">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <h3 class="card-title">View Repository</h3>
+                        <p class="card-desc">Browse, search, and manage all documents in your repository</p>
+                    </div>
+                    
+                    <!-- Plagiarism Check Card -->
+                    <div class="access-card orange" id="plagiarismCheck">
+                        <div class="card-icon orange">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="card-title">Plagiarism Check</h3>
+                        <p class="card-desc">Run documents through the plagiarism detection engine</p>
+                    </div>
+                    
+                    <!-- System Settings Card -->
+                    <div class="access-card purple" id="systemSettings">
+                        <div class="card-icon purple">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3 class="card-title">System Settings</h3>
+                        <p class="card-desc">Configure system preferences, users, and permissions</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <h2 class="section-title">System Overview</h2>
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #3b82f6;">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,247</h3>
+                            <p>Total Documents</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #10b981;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>892</h3>
+                            <p>Verified Documents</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #f59e0b;">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Plagiarism Checks Today</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #8b5cf6;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>18</h3>
+                            <p>Active Users</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Profile Dropdown Overlay -->
+    <div class="profile-overlay" id="profileOverlay"></div>
+    
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" id="profileDropdown">
+        <div class="dropdown-header">
+            <div class="dropdown-avatar" id="dropdownUserAvatar">JS</div>
+            <div class="dropdown-user-info">
+                <div class="dropdown-user-name" id="dropdownUserName">John Smith</div>
+                <div class="dropdown-user-role">Administrator</div>
+                <div class="dropdown-user-email">john.smith@university.edu</div>
+            </div>
+        </div>
+        
+        <div class="dropdown-menu">
+            <div class="dropdown-item" id="profileSettings">
+                <i class="fas fa-user-circle dropdown-icon"></i>
+                <span class="dropdown-text">Profile Settings</span>
+            </div>
+            
+            <div class="dropdown-item" id="changePassword">
+                <i class="fas fa-key dropdown-icon"></i>
+                <span class="dropdown-text">Change Password</span>
+            </div>
+            
+            <div class="dropdown-item" id="profilePicture">
+                <i class="fas fa-camera dropdown-icon"></i>
+                <span class="dropdown-text">Update Profile Picture</span>
+            </div>
+            
+            <div class="dropdown-divider"></div>
+            
+            <div class="dropdown-item" id="accountSettings">
+                <i class="fas fa-user-cog dropdown-icon"></i>
+                <span class="dropdown-text">Account Settings</span>
+            </div>
+            
+            <div class="dropdown-item" id="viewActivity">
+                <i class="fas fa-history dropdown-icon"></i>
+                <span class="dropdown-text">View Activity Log</span>
+            </div>
+            
+            <div class="dropdown-item" id="sessionInfo">
+                <i class="fas fa-clock dropdown-icon"></i>
+                <span class="dropdown-text">Session Information</span>
+            </div>
+        </div>
+        
+        <div class="dropdown-footer">
+            <div class="dropdown-item" id="logoutBtn" style="padding: 0;">
+                <i class="fas fa-sign-out-alt dropdown-icon"></i>
+                <span class="dropdown-text">Logout</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Settings Modal -->
+    <div class="profile-modal" id="profileModal">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle">Profile Settings</div>
+            <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-content">
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" value="John Smith">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" value="john.smith@university.edu">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" value="+1 (555) 123-4567">
+                </div>
+                
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" class="form-group select">
+                        <option value="cs" selected>Computer Science</option>
+                        <option value="math">Mathematics</option>
+                        <option value="physics">Physics</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="business">Business</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" value="Administrator">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bio">Bio / Description</label>
+                    <textarea id="bio" placeholder="Tell us about yourself...">Senior administrator responsible for document management and plagiarism verification at the university.</textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+        </div>
+    </div>
+    
+    <!-- Change Password Modal -->
+    <div class="profile-modal" id="passwordModal">
+        <div class="modal-header">
+            <div class="modal-title">Change Password</div>
+            <button class="modal-close" id="passwordModalClose">&times;</button>
+        </div>
+        <div class="modal-content">
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" placeholder="Enter current password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                </div>
+                
+                <div style="background-color: #f1f5f9; padding: 15px; border-radius: var(--border-radius); margin-top: 20px;">
+                    <p style="font-size: 14px; color: var(--text-light); margin-bottom: 10px;">Password Requirements:</p>
+                    <ul style="font-size: 13px; color: var(--text-light); padding-left: 20px;">
+                        <li>At least 8 characters long</li>
+                        <li>Contains uppercase and lowercase letters</li>
+                        <li>Includes at least one number</li>
+                        <li>Includes at least one special character</li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelPasswordBtn">Cancel</button>
+            <button class="btn btn-primary" id="savePasswordBtn">Update Password</button>
+        </div>
+    </div>
+    
+    <!-- Profile Picture Modal -->
+    <div class="profile-modal" id="pictureModal">
+        <div class="modal-header">
+            <div class="modal-title">Update Profile Picture</div>
+            <button class="modal-close" id="pictureModalClose">&times;</button>
+        </div>
+        <div class="modal-content">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div id="avatarPreview" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: white; font-weight: 600; position: relative;">
+                    JS
+                    <div style="position: absolute; bottom: 5px; right: 5px; background: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); cursor: pointer; box-shadow: var(--shadow);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <p style="color: var(--text-light); font-size: 14px;">Click the camera icon to upload a new photo</p>
+            </div>
+            
+            <div style="border: 2px dashed #cbd5e1; border-radius: var(--border-radius); padding: 30px; text-align: center; cursor: pointer; background-color: #f8fafc; transition: all 0.3s;" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+                <p style="font-weight: 600; margin-bottom: 10px; color: var(--text-dark);">Drag & drop your photo here</p>
+                <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px;">or click to browse files</p>
+                <button class="btn btn-primary" style="padding: 8px 16px; font-size: 14px;">Browse Files</button>
+                <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p style="font-size: 13px; color: var(--text-light);">Recommended: Square image, at least 400x400 pixels, JPG or PNG format.</p>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelPictureBtn">Cancel</button>
+            <button class="btn btn-primary" id="savePictureBtn">Save Picture</button>
+        </div>
+    </div>
+    
+    <!-- Session Information Modal -->
+    <div class="profile-modal" id="sessionModal">
+        <div class="modal-header">
+            <div class="modal-title">Session Information</div>
+            <button class="modal-close" id="sessionModalClose">&times;</button>
+        </div>
+        <div class="modal-content">
+            <div style="margin-bottom: 25px;">
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">Current Session</h3>
+                <div style="background: #f8fafc; padding: 15px; border-radius: var(--border-radius);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="color: var(--text-light);">Session Started:</span>
+                        <span style="font-weight: 600;" id="sessionStartTime">10:30 AM, Today</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="color: var(--text-light);">Duration:</span>
+                        <span style="font-weight: 600;" id="sessionDuration">2 hours 15 minutes</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="color: var(--text-light);">IP Address:</span>
+                        <span style="font-weight: 600;">192.168.1.105</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-light);">Device:</span>
+                        <span style="font-weight: 600;">Chrome on Windows</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">Session Management</h3>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-secondary" id="extendSessionBtn">
+                        <i class="fas fa-clock"></i> Extend Session
+                    </button>
+                    <button class="btn btn-danger" id="endOtherSessionsBtn">
+                        <i class="fas fa-sign-out-alt"></i> End Other Sessions
+                    </button>
+                </div>
+                
+                <div style="background: #fef2f2; padding: 15px; border-radius: var(--border-radius); border: 1px solid #fecaca;">
+                    <p style="color: #dc2626; font-size: 14px; margin-bottom: 10px;">
+                        <i class="fas fa-exclamation-triangle"></i> You have 2 other active sessions
+                    </p>
+                    <button class="btn btn-secondary" style="width: 100%; padding: 8px;" id="viewAllSessionsBtn">
+                        View All Active Sessions
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelSessionBtn">Close</button>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <span id="toastMessage">Profile updated successfully!</span>
+    </div>
+    
+    <!-- Session Timer -->
+    <div class="session-timer" id="sessionTimer">
+        <i class="fas fa-clock timer-icon"></i>
+        <div>
+            <div class="timer-text">Session expires in:</div>
+            <div class="timer-time" id="timerCountdown">59:45</div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="extendTimerBtn" style="margin-left: auto; padding: 5px 10px; font-size: 12px;">
+            <i class="fas fa-plus"></i> Extend
+        </button>
+    </div>
+    
+    <!-- Activity Log -->
+    <div class="activity-log" id="activityLog">
+        <div class="activity-header">
+            <div class="activity-title">Recent Activity</div>
+            <button class="activity-close" id="activityClose">&times;</button>
+        </div>
+        <div class="activity-content" id="activityContent">
+            <!-- Activity items will be added here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar collapse
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            
+            // Rotate the chevron icon
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        });
+        
+        // User Profile Dropdown Functionality
+        const userProfile = document.getElementById('userProfile');
+        const profileOverlay = document.getElementById('profileOverlay');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        // Toggle dropdown when clicking user profile
+        userProfile.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userProfile.classList.toggle('active');
+            profileOverlay.classList.toggle('active');
+            profileDropdown.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking overlay
+        profileOverlay.addEventListener('click', () => {
+            closeDropdown();
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userProfile.contains(e.target) && !profileDropdown.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+        
+        function closeDropdown() {
+            userProfile.classList.remove('active');
+            profileOverlay.classList.remove('active');
+            profileDropdown.classList.remove('active');
+            closeAllModals();
+            hideActivityLog();
+        }
+        
+        // Modal Elements
+        const profileModal = document.getElementById('profileModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const pictureModal = document.getElementById('pictureModal');
+        const sessionModal = document.getElementById('sessionModal');
+        
+        // Function to close all modals
+        function closeAllModals() {
+            profileModal.classList.remove('active');
+            passwordModal.classList.remove('active');
+            pictureModal.classList.remove('active');
+            sessionModal.classList.remove('active');
+            profileOverlay.classList.remove('active');
+        }
+        
+        // Profile Settings Click - HIGHLY FUNCTIONAL
+        document.getElementById('profileSettings').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeDropdown();
+            profileModal.classList.add('active');
+            profileOverlay.classList.add('active');
+            
+            // Add activity log entry
+            addActivityLog('Opened profile settings');
+        });
+        
+        // Change Password Click - HIGHLY FUNCTIONAL
+        document.getElementById('changePassword').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeDropdown();
+            passwordModal.classList.add('active');
+            profileOverlay.classList.add('active');
+            
+            // Add activity log entry
+            addActivityLog('Opened password change form');
+        });
+        
+        // Profile Picture Click - HIGHLY FUNCTIONAL
+        document.getElementById('profilePicture').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeDropdown();
+            pictureModal.classList.add('active');
+            profileOverlay.classList.add('active');
+            
+            // Add activity log entry
+            addActivityLog('Opened profile picture update');
+        });
+        
+        // Account Settings Click - HIGHLY FUNCTIONAL
+        document.getElementById('accountSettings').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeDropdown();
+            showToast('Redirecting to account settings...', 'info');
+            
+            // Simulate navigation delay
+            setTimeout(() => {
+                window.location.href = 'settings.html';
+            }, 500);
+            
+            // Add activity log entry
+            addActivityLog('Navigated to account settings');
+        });
+        
+        // View Activity Click - HIGHLY FUNCTIONAL
+        document.getElementById('viewActivity').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeDropdown();
+            showActivityLog();
+            
+            // Add activity log entry
+            addActivityLog('Viewed activity log');
+        });
+        
+        // Session Information Click - HIGHLY FUNCTIONAL
+        document.getElementById('sessionInfo').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeDropdown();
+            sessionModal.classList.add('active');
+            profileOverlay.classList.add('active');
+            
+            // Update session info
+            updateSessionInfo();
+            
+            // Add activity log entry
+            addActivityLog('Viewed session information');
+        });
+        
+        // Logout Click - HIGHLY FUNCTIONAL
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Show confirmation with session info
+            const confirmLogout = confirm(`Are you sure you want to logout?\n\nSession Duration: ${getSessionDuration()}\n\nYou will need to login again to access the system.`);
+            
+            if (confirmLogout) {
+                showToast('Logging out...', 'info');
+                
+                // Add activity log entry
+                addActivityLog('User logged out');
+                
+                // Save activity log to localStorage before redirecting
+                saveActivityLog();
+                
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
+        });
+        
+        // // Modal close buttons
+        document.getElementById('modalClose').addEventListener('click', closeAllModals);
+        document.getElementById('cancelBtn').addEventListener('click', closeAllModals);
+        
+        document.getElementById('passwordModalClose').addEventListener('click', closeAllModals);
+        document.getElementById('cancelPasswordBtn').addEventListener('click', closeAllModals);
+        
+        document.getElementById('pictureModalClose').addEventListener('click', closeAllModals);
+        document.getElementById('cancelPictureBtn').addEventListener('click', closeAllModals);
+        
+        document.getElementById('sessionModalClose').addEventListener('click', closeAllModals);
+        document.getElementById('cancelSessionBtn').addEventListener('click', closeAllModals);
+        
+        // Activity log close
+        document.getElementById('activityClose').addEventListener('click', hideActivityLog);
+        
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            // Update toast color based on type
+            if (type === 'success') {
+                toast.style.background = '#10b981';
+                toast.querySelector('i').className = 'fas fa-check-circle toast-icon';
+            } else if (type === 'error') {
+                toast.style.background = '#ef4444';
+                toast.querySelector('i').className = 'fas fa-exclamation-circle toast-icon';
+            } else if (type === 'info') {
+                toast.style.background = '#3b82f6';
+                toast.querySelector('i').className = 'fas fa-info-circle toast-icon';
+            } else if (type === 'warning') {
+                toast.style.background = '#f59e0b';
+                toast.querySelector('i').className = 'fas fa-exclamation-triangle toast-icon';
+            }
+            
+            // Update message
+            toastMessage.textContent = message;
+            
+            // Show toast
+            toast.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Save Profile - HIGHLY FUNCTIONAL
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const department = document.getElementById('department').value;
+            const position = document.getElementById('position').value.trim();
+            const bio = document.getElementById('bio').value.trim();
+            
+            if (!fullName) {
+                showToast('Please enter your name', 'error');
+                return;
+            }
+            
+            if (!email) {
+                showToast('Please enter your email', 'error');
+                return;
+            }
+            
+            // Update user info in all places
+            updateUserName(fullName);
+            
+            // Update other profile info
+            document.getElementById('dropdownUserEmail').textContent = email;
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('userProfile', JSON.stringify({
+                name: fullName,
+                email: email,
+                phone: phone,
+                department: department,
+                position: position,
+                bio: bio
+            }));
+            
+            showToast('Profile updated successfully! Your changes have been saved.', 'success');
+            
+            // Add activity log entry
+            addActivityLog('Updated profile information');
+            
+            closeAllModals();
+        });
+        
+        // Save Password - HIGHLY FUNCTIONAL
+        document.getElementById('savePasswordBtn').addEventListener('click', () => {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Basic validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('Please fill in all password fields.', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('New passwords do not match.', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showToast('Password must be at least 8 characters long.', 'error');
+                return;
+            }
+            
+            // Check password strength
+            if (!isStrongPassword(newPassword)) {
+                showToast('Password must include uppercase, lowercase, number, and special character.', 'error');
+                return;
+            }
+            
+            // In a real application, you would send this to the server
+            // For demo, we'll simulate success
+            showToast('Password updated successfully! Please use your new password next time you login.', 'success');
+            
+            // Reset form
+            document.getElementById('passwordForm').reset();
+            
+            // Add activity log entry
+            addActivityLog('Changed account password');
+            
+            // Reset session timer since password was changed
+            resetSessionTimer();
+            
+            closeAllModals();
+        });
+        
+        // Save Picture - HIGHLY FUNCTIONAL
+        document.getElementById('savePictureBtn').addEventListener('click', () => {
+            const avatarPreview = document.getElementById('avatarPreview');
+            
+            // Check if an image was uploaded
+            if (avatarPreview.style.backgroundImage && avatarPreview.style.backgroundImage !== 'none') {
+                // Save to localStorage
+                localStorage.setItem('userAvatar', avatarPreview.style.backgroundImage);
+                
+                // Update main avatars
+                document.getElementById('userAvatar').style.backgroundImage = avatarPreview.style.backgroundImage;
+                document.getElementById('userAvatar').style.backgroundSize = 'cover';
+                document.getElementById('userAvatar').style.backgroundPosition = 'center';
+                document.getElementById('userAvatar').textContent = '';
+                
+                document.getElementById('dropdownUserAvatar').style.backgroundImage = avatarPreview.style.backgroundImage;
+                document.getElementById('dropdownUserAvatar').style.backgroundSize = 'cover';
+                document.getElementById('dropdownUserAvatar').style.backgroundPosition = 'center';
+                document.getElementById('dropdownUserAvatar').textContent = '';
+                
+                showToast('Profile picture updated successfully!', 'success');
+                
+                // Add activity log entry
+                addActivityLog('Updated profile picture');
+            } else {
+                showToast('No new picture selected. Please upload a picture first.', 'warning');
+                return;
+            }
+            
+            closeAllModals();
+        });
+        
+        // Profile picture upload - HIGHLY FUNCTIONAL
+        const uploadArea = document.getElementById('uploadArea');
+        const profilePictureInput = document.getElementById('profilePictureInput');
+        const avatarPreview = document.getElementById('avatarPreview');
+        
+        uploadArea.addEventListener('click', () => {
+            profilePictureInput.click();
+        });
+        
+        avatarPreview.addEventListener('click', (e) => {
+            if (e.target.closest('.fa-camera') || e.target.closest('div').className === '') {
+                profilePictureInput.click();
+            }
+        });
+        
+        profilePictureInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    showToast('Please select an image file.', 'error');
+                    return;
+                }
+                
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('File size must be less than 5MB.', 'error');
+                    return;
+                }
+                
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Update preview
+                    avatarPreview.style.backgroundImage = `url(${event.target.result})`;
+                    avatarPreview.style.backgroundSize = 'cover';
+                    avatarPreview.style.backgroundPosition = 'center';
+                    avatarPreview.textContent = '';
+                    
+                    // Add camera icon overlay
+                    const cameraIcon = document.createElement('div');
+                    cameraIcon.style.position = 'absolute';
+                    cameraIcon.style.bottom = '5px';
+                    cameraIcon.style.right = '5px';
+                    cameraIcon.style.background = 'white';
+                    cameraIcon.style.width = '30px';
+                    cameraIcon.style.height = '30px';
+                    cameraIcon.style.borderRadius = '50%';
+                    cameraIcon.style.display = 'flex';
+                    cameraIcon.style.alignItems = 'center';
+                    cameraIcon.style.justifyContent = 'center';
+                    cameraIcon.style.color = 'var(--primary-color)';
+                    cameraIcon.style.cursor = 'pointer';
+                    cameraIcon.style.boxShadow = 'var(--shadow)';
+                    cameraIcon.innerHTML = '<i class="fas fa-camera"></i>';
+                    cameraIcon.addEventListener('click', () => profilePictureInput.click());
+                    
+                    avatarPreview.appendChild(cameraIcon);
+                };
+                reader.readAsDataURL(file);
+                
+                // Add activity log entry
+                addActivityLog('Selected new profile picture');
+            }
+        });
+        
+        // Session modal functionality
+        document.getElementById('extendSessionBtn').addEventListener('click', () => {
+            extendSession();
+            showToast('Session extended by 30 minutes', 'success');
+            closeAllModals();
+        });
+        
+        document.getElementById('endOtherSessionsBtn').addEventListener('click', () => {
+            if (confirm('This will end all other active sessions. Continue?')) {
+                showToast('All other sessions have been ended', 'success');
+                addActivityLog('Ended all other active sessions');
+                closeAllModals();
+            }
+        });
+        
+        document.getElementById('viewAllSessionsBtn').addEventListener('click', () => {
+            showToast('Opening session management...', 'info');
+            addActivityLog('Viewed all active sessions');
+            closeAllModals();
+        });
+        
+        // Session timer functionality
+        document.getElementById('extendTimerBtn').addEventListener('click', extendSession);
+        
+        // Quick access card clicks - all functional
+        document.getElementById('enterNewProject').addEventListener('click', () => {
+            showToast('Navigating to upload page...', 'info');
+            addActivityLog('Clicked: Enter New Project');
+            setTimeout(() => {
+                window.location.href = 'upload.html';
+            }, 500);
+        });
+        
+        document.getElementById('viewRepository').addEventListener('click', () => {
+            showToast('Opening document repository...', 'info');
+            addActivityLog('Clicked: View Repository');
+            setTimeout(() => {
+                window.location.href = 'repo.html';
+            }, 500);
+        });
+        
+        document.getElementById('plagiarismCheck').addEventListener('click', () => {
+            showToast('Loading plagiarism engine...', 'info');
+            addActivityLog('Clicked: Plagiarism Check');
+            setTimeout(() => {
+                window.location.href = 'plag.html';
+            }, 500);
+        });
+        
+        document.getElementById('systemSettings').addEventListener('click', () => {
+            showToast('Opening system settings...', 'info');
+            addActivityLog('Clicked: System Settings');
+            setTimeout(() => {
+                window.location.href = 'settings.html';
+            }, 500);
+        });
+        
+        // Helper function to get initials from name
+        function getInitials(name) {
+            return name.split(' ')
+                .map(part => part.charAt(0))
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+        }
+        
+        // Function to update user name in all places
+        function updateUserName(name) {
+            // Update in header
+            document.getElementById('headerUserName').textContent = name;
+            
+            // Update in dropdown
+            document.getElementById('dropdownUserName').textContent = name;
+            
+            // Update initials in avatars if no custom picture
+            const initials = getInitials(name);
+            const userAvatar = document.getElementById('userAvatar');
+            const dropdownAvatar = document.getElementById('dropdownUserAvatar');
+            
+            if (!userAvatar.style.backgroundImage || userAvatar.style.backgroundImage === 'none') {
+                userAvatar.textContent = initials;
+                userAvatar.style.backgroundImage = 'none';
+            }
+            
+            if (!dropdownAvatar.style.backgroundImage || dropdownAvatar.style.backgroundImage === 'none') {
+                dropdownAvatar.textContent = initials;
+                dropdownAvatar.style.backgroundImage = 'none';
+            }
+            
+            // Update modal form
+            document.getElementById('fullName').value = name;
+        }
+        
+        // Function to check password strength
+        function isStrongPassword(password) {
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
+        }
+        
+        // Session timer functionality
+        let sessionEndTime = new Date().getTime() + (60 * 60 * 1000); // 1 hour from now
+        let sessionTimerInterval;
+        
+        function startSessionTimer() {
+            clearInterval(sessionTimerInterval);
+            
+            sessionTimerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const timeLeft = sessionEndTime - now;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(sessionTimerInterval);
+                    showSessionExpired();
+                    return;
+                }
+                
+                // Show timer when less than 10 minutes left
+                if (timeLeft <= 10 * 60 * 1000) {
+                    document.getElementById('sessionTimer').classList.add('active');
+                }
+                
+                // Update timer display
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                document.getElementById('timerCountdown').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+            }, 1000);
+        }
+        
+        function extendSession() {
+            // Add 30 minutes to session
+            sessionEndTime += 30 * 60 * 1000;
+            startSessionTimer();
+            document.getElementById('sessionTimer').classList.remove('active');
+            showToast('Session extended by 30 minutes', 'success');
+            addActivityLog('Extended session timeout');
+            
+            // Update session info modal
+            updateSessionInfo();
+        }
+        
+        function showSessionExpired() {
+            showToast('Your session has expired. Please login again.', 'warning');
+            addActivityLog('Session expired automatically');
+            
+            // Redirect to login after delay
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+        }
+        
+        function getSessionDuration() {
+            const sessionStart = sessionEndTime - (60 * 60 * 1000); // Session started 1 hour before end time
+            const now = new Date().getTime();
+            const durationMs = now - sessionStart;
+            
+            const hours = Math.floor(durationMs / (1000 * 60 * 60));
+            const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (hours > 0) {
+                return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${minutes > 1 ? 's' : ''}`;
+            } else {
+                return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+            }
+        }
+        
+        function updateSessionInfo() {
+            const now = new Date();
+            const startTime = new Date(sessionEndTime - (60 * 60 * 1000));
+            
+            // Format time
+            const options = { hour: 'numeric', minute: '2-digit', hour12: true };
+            const startTimeStr = startTime.toLocaleTimeString('en-US', options);
+            
+            document.getElementById('sessionStartTime').textContent = `${startTimeStr}, Today`;
+            document.getElementById('sessionDuration').textContent = getSessionDuration();
+        }
+        
+        function resetSessionTimer() {
+            sessionEndTime = new Date().getTime() + (60 * 60 * 1000);
+            startSessionTimer();
+            document.getElementById('sessionTimer').classList.remove('active');
+        }
+        
+        // Activity log functionality
+        let activityLog = [];
+        
+        function addActivityLog(action) {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            
+            activityLog.unshift({
+                time: time,
+                action: action,
+                timestamp: now.getTime()
+            });
+            
+            // Keep only last 50 activities
+            if (activityLog.length > 50) {
+                activityLog = activityLog.slice(0, 50);
+            }
+            
+            // Update activity log display if visible
+            updateActivityLogDisplay();
+            
+            // Save to localStorage
+            saveActivityLog();
+        }
+        
+        function updateActivityLogDisplay() {
+            const activityContent = document.getElementById('activityContent');
+            activityContent.innerHTML = '';
+            
+            activityLog.forEach(item => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-time">${item.time}</div>
+                    <div>${item.action}</div>
+                `;
+                activityContent.appendChild(activityItem);
+            });
+        }
+        
+        function showActivityLog() {
+            document.getElementById('activityLog').classList.add('active');
+            profileOverlay.classList.add('active');
+        }
+        
+        function hideActivityLog() {
+            document.getElementById('activityLog').classList.remove('active');
+            profileOverlay.classList.remove('active');
+        }
+        
+        function saveActivityLog() {
+            localStorage.setItem('userActivityLog', JSON.stringify(activityLog));
+        }
+        
+        function loadActivityLog() {
+            const savedLog = localStorage.getItem('userActivityLog');
+            if (savedLog) {
+                activityLog = JSON.parse(savedLog);
+                updateActivityLogDisplay();
+            }
+            
+            // Add initial activity if log is empty
+            if (activityLog.length === 0) {
+                addActivityLog('User logged in to dashboard');
+                addActivityLog('Dashboard loaded successfully');
+            }
+        }
+        
+        // Load saved profile data
+        function loadProfileData() {
+            const savedProfile = localStorage.getItem('userProfile');
+            if (savedProfile) {
+                const profile = JSON.parse(savedProfile);
+                
+                // Update all fields
+                updateUserName(profile.name);
+                document.getElementById('email').value = profile.email || 'john.smith@university.edu';
+                document.getElementById('phone').value = profile.phone || '+1 (555) 123-4567';
+                document.getElementById('department').value = profile.department || 'cs';
+                document.getElementById('position').value = profile.position || 'Administrator';
+                document.getElementById('bio').value = profile.bio || 'Senior administrator responsible for document management and plagiarism verification at the university.';
+                document.getElementById('dropdownUserEmail').textContent = profile.email || 'john.smith@university.edu';
+            }
+            
+            // Load saved avatar
+            const savedAvatar = localStorage.getItem('userAvatar');
+            if (savedAvatar) {
+                document.getElementById('userAvatar').style.backgroundImage = savedAvatar;
+                document.getElementById('userAvatar').style.backgroundSize = 'cover';
+                document.getElementById('userAvatar').style.backgroundPosition = 'center';
+                document.getElementById('userAvatar').textContent = '';
+                
+                document.getElementById('dropdownUserAvatar').style.backgroundImage = savedAvatar;
+                document.getElementById('dropdownUserAvatar').style.backgroundSize = 'cover';
+                document.getElementById('dropdownUserAvatar').style.backgroundPosition = 'center';
+                document.getElementById('dropdownUserAvatar').textContent = '';
+                
+                // Update preview modal
+                document.getElementById('avatarPreview').style.backgroundImage = savedAvatar;
+                document.getElementById('avatarPreview').style.backgroundSize = 'cover';
+                document.getElementById('avatarPreview').style.backgroundPosition = 'center';
+                document.getElementById('avatarPreview').textContent = '';
+            }
+        }
+        
+        // Initialize everything when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load saved data
+            loadProfileData();
+            loadActivityLog();
+            
+            // Start session timer
+            startSessionTimer();
+            
+            // Add initial activity
+            addActivityLog('Page initialized and loaded');
+            
+            // Show welcome message
+            setTimeout(() => {
+                const userName = document.getElementById('headerUserName').textContent;
+                showToast(`Welcome back, ${userName}! You're all set to manage your documents.`, 'info');
+            }, 1000);
+        });
+        
+        // Track user activity to reset session timer
+        let activityTimeout;
+        document.addEventListener('mousemove', () => {
+            clearTimeout(activityTimeout);
+            activityTimeout = setTimeout(() => {
+                // User is active, we could track this for analytics
+            }, 1000);
+        });
+        
+        document.addEventListener('keypress', () => {
+            clearTimeout(activityTimeout);
+            activityTimeout = setTimeout(() => {
+                // User is active
+            }, 1000);
+        });
+        
+        // Responsive behavior: auto-collapse sidebar on small screens
+        function handleResponsive() {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.add('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                sidebar.classList.remove('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        }
+        
+        // Initial responsive check
+        handleResponsive();
+        
+        // Listen for window resize
+        window.addEventListener('resize', handleResponsive);
+    </script>
+</body>
+</html>
