@@ -775,7 +775,6 @@
             align-items: center;
             gap: 12px;
             position: relative;
-            cursor: pointer;
         }
         
         .avatar {
@@ -1557,36 +1556,36 @@
             }
         });
         
-        // User Profile Dropdown Functionality
-        const userProfile = document.getElementById('userProfile');
-        const profileOverlay = document.getElementById('profileOverlay');
-        const profileDropdown = document.getElementById('profileDropdown');
+        // // User Profile Dropdown Functionality
+        // const userProfile = document.getElementById('userProfile');
+        // const profileOverlay = document.getElementById('profileOverlay');
+        // const profileDropdown = document.getElementById('profileDropdown');
         
-        // Toggle dropdown when clicking user profile
-        userProfile.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userProfile.classList.toggle('active');
-            profileOverlay.classList.toggle('active');
-            profileDropdown.classList.toggle('active');
-        });
+        // // Toggle dropdown when clicking user profile
+        // userProfile.addEventListener('click', (e) => {
+        //     e.stopPropagation();
+        //     userProfile.classList.toggle('active');
+        //     profileOverlay.classList.toggle('active');
+        //     profileDropdown.classList.toggle('active');
+        // });
         
-        // Close dropdown when clicking overlay
-        profileOverlay.addEventListener('click', () => {
-            closeDropdown();
-        });
+        // // Close dropdown when clicking overlay
+        // profileOverlay.addEventListener('click', () => {
+        //     closeDropdown();
+        // });
         
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!userProfile.contains(e.target) && !profileDropdown.contains(e.target)) {
-                closeDropdown();
-            }
-        });
+        // // Close dropdown when clicking outside
+        // document.addEventListener('click', (e) => {
+        //     if (!userProfile.contains(e.target) && !profileDropdown.contains(e.target)) {
+        //         closeDropdown();
+        //     }
+        // });
         
-        function closeDropdown() {
-            userProfile.classList.remove('active');
-            profileOverlay.classList.remove('active');
-            profileDropdown.classList.remove('active');
-        }
+        // function closeDropdown() {
+        //     userProfile.classList.remove('active');
+        //     profileOverlay.classList.remove('active');
+        //     profileDropdown.classList.remove('active');
+        // }
         
         // Show toast notification
         function showToast(message, type = 'success') {
